@@ -169,7 +169,7 @@ void get_verdict(std::vector<float> t, std::vector<std::string> m) {
     weights[0] = 3;
     weights[1] = 4;
 
-    float final_score = (t[0]*weights[0] + t[1]*weights[1]);
+    float final_score = (t[0]*weights[0] + t[1]*weights[1])/sum(weights);
     std::string verdict;
 
     if(final_score < 1)
