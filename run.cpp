@@ -14,7 +14,7 @@ char const * target_folder = "/media/sayan/Data/Programmer/Plagiarism/target";
 char const * stopwords_file = "/media/sayan/Data/Programmer/Plagiarism/stopwords.txt";
 
 int score_accuracy = 1;
-int number_of_tests = 3;
+int number_of_tests = 2;
 
 float dot_product(std::vector<int> a, std::vector<int> b) {
     float sum = 0 ;
@@ -32,12 +32,6 @@ float sum(std::vector<int> v) {
 
 float get_multiplier(std::string word) {
     return word.length() * word.length();
-}
-
-float cosine_score(std::vector<int> bvector, std::vector<int> tvector) {
-    return dot_product(bvector, tvector) / 
-            (   sqrt(dot_product(bvector, bvector)) * 
-                sqrt(dot_product(tvector, tvector)) );
 }
 
 bool endswith (std::string const &fullString, std::string const &ending) {
@@ -164,48 +158,6 @@ float ngram_test(std::vector<std::string> b_tokens, std::vector<std::string> t_t
     return score;
 }
 
-float cosine_test(std::vector<std::string> b_tokens, std::vector<std::string> t_tokens) {
-    std::ifstream infile(stopwords_file);
-    std::string stopword;
-    while (infile >> stopword) {
-        t_tokens.erase(std::remove(t_tokens.begin(), t_tokens.end(), stopword), t_tokens.end());
-        b_tokens.erase(std::remove(b_tokens.begin(), b_tokens.end(), stopword), b_tokens.end());
-    }
-
-    std::vector<std::string> all_tokens;
-    all_tokens.reserve( t_tokens.size() + b_tokens.size() );
-    all_tokens.insert( all_tokens.end(), t_tokens.begin(), t_tokens.end() );
-    all_tokens.insert( all_tokens.end(), b_tokens.begin(), b_tokens.end() );
-    sort( all_tokens.begin(), all_tokens.end() );
-    all_tokens.erase( unique( all_tokens.begin(), all_tokens.end() ), all_tokens.end() );
-
-    auto t_freqs = get_frequency(t_tokens);
-    auto b_freqs = get_frequency(b_tokens);
-
-    std::vector<int> b_vector;
-    std::vector<int> t_vector;
-
-    for(auto & token: all_tokens) {
-        auto search = b_freqs.find(token);
-        if(search != b_freqs.end()) {
-            b_vector.push_back(search->second);
-        } else {
-            b_vector.push_back(0);
-        }
-
-        search = t_freqs.find(token);
-        if(search != t_freqs.end()) {
-            t_vector.push_back(search->second);
-        } else {
-            t_vector.push_back(0);
-        }
-    }
-
-    float score = 10.0 * cosine_score(b_vector, t_vector);
-
-    return score;
-}
-
 void get_verdict(std::vector<float> t, std::vector<std::string> m) {
     std::vector<int> weights (t.size(), 0);
     
@@ -294,20 +246,12 @@ int main() {
                                 test[1] = temp;
                                 match[1] = dir_object->d_name;
                             }
-                            temp = cosine_test(b_tokens, t_tokens);
-                            if(test[2] < temp) {
-                                test[2] = temp;
-                                match[2] = dir_object->d_name;
-                            }
-
                         }
                     closedir (dirB);
                 }
 
                 std::cout<<"Test 1 score: "<<std::fixed<<std::setprecision(score_accuracy)<<test[0]<<"/10"<<std::endl;
                 std::cout<<"Test 2 score: "<<std::fixed<<std::setprecision(score_accuracy)<<test[1]<<"/10"<<std::endl;
-                std::cout<<"Test 3 score: "<<std::fixed<<std::setprecision(score_accuracy)<<test[2]<<"/10"<<std::endl;
-
                 get_verdict(test, match);
 
                 std::cout<<std::endl;
