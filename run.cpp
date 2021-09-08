@@ -9,9 +9,9 @@
 #include <sstream>
 #include <iomanip>
 
-char const * database = "/media/sayan/Data/Programmer/Plagiarism/database";
-char const * target_folder = "/media/sayan/Data/Programmer/Plagiarism/target";
-char const * stopwords_file = "/media/sayan/Data/Programmer/Plagiarism/stopwords.txt";
+char const * database = "/media/rishavkatyal/Data/Programmer/Plagiarism/database";
+char const * target_folder = "/media/rishavkatyal/Data/Programmer/Plagiarism/target";
+char const * stopwords_file = "/media/rishavkatyal/Data/Programmer/Plagiarism/stopwords.txt";
 
 int score_accuracy = 1;
 int number_of_tests = 2;
@@ -164,14 +164,12 @@ void get_verdict(std::vector<float> t, std::vector<std::string> m) {
     /**************************
         test1 - tokenize test
         test2 - ngram test
-        test3 - cosine test
     ***************************/
 
     weights[0] = 3;
     weights[1] = 4;
-    weights[2] = 3;
 
-    float final_score = (t[0]*weights[0] + t[1]*weights[1] + t[2]*weights[2])/sum(weights);
+    float final_score = (t[0]*weights[0] + t[1]*weights[1]);
     std::string verdict;
 
     if(final_score < 1)
