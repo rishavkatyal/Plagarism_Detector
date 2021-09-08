@@ -10,10 +10,6 @@ Uses naive methods to detect observable plagiarism in text files.
 #### 2. N-Gram matching
 >A direct match of consecutive tokens *(or ngrams)* was performed to detect similarity in patterns and neighbourhood of tokens. The value of **N** for the N-Gram generation was varied and a cumulative result was obtained by a weighted average over all of the results.
 
-#### 3. Cosine matching
->Cosine of the angle between the vectors obtained from the target and the base text files is computed to estimate the simiilarity in the token vectors of both the files.
-
-
 ## Getting started
 **1.**   Place all the reference text files in the **database** directory.
 
